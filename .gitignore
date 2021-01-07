@@ -130,3 +130,6 @@ dmypy.json
 
 # Telegram config
 config.ini
+
+# DB
+*.db

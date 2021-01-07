@@ -3,9 +3,9 @@ import sqlite3
 
 # Data Base with Reminders
 # DB: reminders.db
-# DB:
 # Table with reminders: usrReminders
 # Table with users: allowedUsers
+
 def add_row(userid, date, time, comment):
     conn = sqlite3.connect('reminders.db')
     cur = conn.cursor()
@@ -27,6 +27,13 @@ def del_row(rid):
     conn = sqlite3.connect('reminders.db')
     cur = conn.cursor()
     cur.execute(f"DELETE FROM usrReminders WHERE rid={rid};")
+    conn.commit()
+
+
+def del_all(userid):
+    conn = sqlite3.connect('reminders.db')
+    cur = conn.cursor()
+    cur.execute(f"DELETE FROM usrReminders WHERE userid={userid};")
     conn.commit()
 
 
@@ -57,4 +64,3 @@ def add_user(userid):
     cur.execute("INSERT INTO allowedUsers VALUES(?, ?, ?);",
                 [int(result[0]) + 1, userid, 100])
     conn.commit()
-

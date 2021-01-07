@@ -35,19 +35,20 @@ def bot_talks(message):
         add_reminder.add_new_reminder(message)
     elif message.text == MyBot.myRem_btn:
         edit_reminders.show_my_reminders(message)
+    elif message.text == MyBot.delAll_btn:
+        db_actions.del_all(message.chat.id)
+        bot.send_message(message.chat.id, "All data has been successfully deleted")
     else:
         bot.send_message(message.chat.id, "I do not understand you."
                                           "\nPlease, use your special buttons.")
 
 
-@bot.message_handler(commands=['main'])
 def bot_main_menu(message):
     # Buttons with commands
     func_markup = types.ReplyKeyboardMarkup()
-    btn_CreateReminder = types.KeyboardButton(MyBot.newRem_btn)
-    btn_MyReminders = types.KeyboardButton(MyBot.myRem_btn)
-    func_markup.row(btn_CreateReminder)
-    func_markup.row(btn_MyReminders)
+    func_markup.row(types.KeyboardButton(MyBot.newRem_btn))
+    func_markup.row(types.KeyboardButton(MyBot.myRem_btn))
+    func_markup.row(types.KeyboardButton(MyBot.delAll_btn))
     bot.send_message(message.chat.id, "Main menu.\nSo... What we gonna do?", reply_markup=func_markup)
 
 

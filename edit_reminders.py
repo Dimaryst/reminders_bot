@@ -13,6 +13,7 @@ def show_my_reminders(message):
         for itm in user_reminders:
             btnText = f"{str(itm[0])} // \"{str(itm[4])}\" -- {str(itm[2])}/{str(itm[3])}"
             btns.row(types.KeyboardButton(btnText))
+        btns.row(types.KeyboardButton(MyBot.abort_btn))
         bot.send_message(message.chat.id,
                          f"Select the reminder that you want to modify:",
                          reply_markup=btns)
@@ -24,18 +25,20 @@ def show_my_reminders(message):
 
 
 def edit_selected_reminder(message):
-    REQUEST.append(message.text.split(" ", 1)[0])  #
-    btns = types.ReplyKeyboardMarkup()
-    btns.row(types.KeyboardButton(MyBot.del_btn))
-    btns.row(types.KeyboardButton(MyBot.mdfy_btn))
-    btns.row(types.KeyboardButton(MyBot.myRem_btn))
-    btns.row(types.KeyboardButton(MyBot.gtMainMenu_btn))
-    bot.send_message(message.chat.id, f"Selected reminder:"
-                                      f"\n{message.text}"
-                                      f"\n\nOkay, what do you want to do with it?",
-                     reply_markup=btns)
+    if message.text == MyBot.abort_btn:
+        abort_action(message)
+    else:
+        REQUEST.append(message.text.split(" ", 1)[0])  #
+        btns = types.ReplyKeyboardMarkup()
+        btns.row(types.KeyboardButton(MyBot.del_btn))
+        # btns.row(types.KeyboardButton(MyBot.mdfy_btn))
+        btns.row(types.KeyboardButton(MyBot.abort_btn))
+        bot.send_message(message.chat.id, f"Selected reminder:"
+                                          f"\n{message.text}"
+                                          f"\n\nOkay, what do you want to do with it?",
+                         reply_markup=btns)
 
-    bot.register_next_step_handler(message, write_changes)
+        bot.register_next_step_handler(message, write_changes)
 
 
 def write_changes(message):
@@ -48,9 +51,15 @@ def write_changes(message):
         bot.send_message(message.chat.id,
                          f"Reminder deleted.",
                          reply_markup=btns)
-    elif message.text == MyBot.mdfy_btn:
-        bot.send_message(bot.send_message(message.chat.id,
-                                          f"This function doesn't work",
-                                          reply_markup=btns))
+    elif message.text == MyBot.abort_btn:
+        bot.send_message(message.chat.id,
+                         f"Canceled.",
+                         reply_markup=btns)
     REQUEST.clear()
-    print(REQUEST)
+
+
+def abort_action(message):
+    btns = types.ReplyKeyboardMarkup()
+    btns.row(types.KeyboardButton(MyBot.gtMainMenu_btn))
+    btns.row(types.KeyboardButton(MyBot.newRem_btn))
+    bot.send_message(message.chat.id, "Canceled", reply_markup=btns)
