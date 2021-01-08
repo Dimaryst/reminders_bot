@@ -35,6 +35,7 @@ def del_all(userid):
     cur = conn.cursor()
     cur.execute(f"DELETE FROM usrReminders WHERE userid={userid};")
     conn.commit()
+    conn.close()
 
 
 def check_user_reminders(userid):
@@ -42,6 +43,7 @@ def check_user_reminders(userid):
     cur = conn.cursor()
     cur.execute(f"SELECT * FROM usrReminders WHERE userid={userid};")
     result = cur.fetchall()
+    conn.close()
     return result
 
 
@@ -50,6 +52,7 @@ def check_user(userid):
     cur = conn.cursor()
     cur.execute(f"SELECT * FROM allowedUsers WHERE userid={userid};")
     result = cur.fetchone()
+    conn.close()
     if result is not None:
         return True
     else:
@@ -64,3 +67,4 @@ def add_user(userid):
     cur.execute("INSERT INTO allowedUsers VALUES(?, ?, ?);",
                 [int(result[0]) + 1, userid, 100])
     conn.commit()
+    conn.close()
